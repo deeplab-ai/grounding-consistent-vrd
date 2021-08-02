@@ -1,0 +1,7 @@
+Pillow==6.0.0
+gdown
+h5py
+numpy
+scipy
+pyyaml
+wget

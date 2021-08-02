@@ -1,0 +1,9 @@
+Pillow==6.0.0
+colorlog==4.0.2
+h5py
+torch==1.4.0
+torchvision==0.5.0
+tqdm==4.31.1
+scikit-learn==0.22.2
+pyyaml
+tensorboard
