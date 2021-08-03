@@ -4,7 +4,6 @@
 import numpy as np
 import torch
 import torch.nn.functional as F
-from pdb import set_trace
 
 
 class GroundEvaluator:
@@ -96,60 +95,6 @@ class GroundEvaluator:
             if filename in self._annos.keys():
                 self._wmIoU[typ].append(wmIoU.cpu().numpy())
 
-    # def step(self, filename, pred_masks, pred_nrm_boxes, gt_masks):
-    #     """
-    #     Evaluate accuracy for a given image.
-    #
-    #     Inputs:
-    #         - filename: str, name of the image to evaluate
-    #         - pred_masks: [nparray, nparray], numpy arrays of subject/object
-    #             predicted heatmaps, at least ones must not be None
-    #         - pred_nrm_boxes: [nparray, nparray], numpy arrays of normalized
-    #             width/2 and height/2
-    #         - gt_masks: same as pred_masks, gt masks of subjects/objects
-    #     """
-    #     shape = pred_masks[0].shape
-    #     max_subj = pred_masks[0].reshape(shape[0], -1).max(1).reshape((shape[0], 1, 1))
-    #     max_obj = pred_masks[1].reshape(shape[0], -1).max(1).reshape((shape[0], 1, 1))
-    #     pred_masks = [
-    #             pred_masks[0] / (max_subj + 1e-8),
-    #             pred_masks[1] / (max_obj + 1e-8),
-    #     ]
-    #     pred_masks_dict = {'subj': pred_masks[0], 'obj': pred_masks[1]}
-    #     gt_masks_dict = {'subj': gt_masks[0].squeeze(1), 'obj': gt_masks[1].squeeze(1)}
-    #     # Update true positive counter and get gt labels-bboxes
-    #     if pred_masks[0] is not None and pred_masks[1] is not None:
-    #         pred_masks_dict['total'] = np.concatenate(
-    #             (pred_masks[0], pred_masks[1]), axis=0)
-    #         gt_masks_dict['total'] = np.concatenate(
-    #             (gt_masks[0], gt_masks[1]), axis=0)
-    #     elif pred_masks[0] is not None:
-    #         pred_masks_dict['total'] = pred_masks[0]
-    #         gt_masks_dict['total'] = gt_masks[0]
-    #     elif pred_masks[1] is not None:
-    #         pred_masks_dict['total'] = pred_masks[1]
-    #         gt_masks_dict['total'] = gt_masks[1]
-    #     for typ in ['subj', 'obj', 'total']:
-    #         if pred_masks_dict[typ] is None:
-    #             continue
-    #         pred_masks_dict[typ] =\
-    #             (pred_masks_dict[typ] > self.hmap_threshold
-    #              ).astype(np.bool).reshape(pred_masks_dict[typ].shape[0], -1)
-    #         gt_masks_dict[typ] =\
-    #             gt_masks_dict[typ].astype(
-    #                 np.bool).reshape(gt_masks_dict[typ].shape[0], -1)
-    #         if filename in self._annos.keys():
-    #             self._gt_positive_counter[typ].append(
-    #                 gt_masks_dict[typ].sum()
-    #             )
-    #         # Compute the different recall types
-    #             self._true_positive_counter[typ].append(
-    #                 np.logical_and(
-    #                     np.logical_and(pred_masks_dict[typ],
-    #                                    gt_masks_dict[typ]),
-    #                     gt_masks_dict[typ]).sum())
-    #             self._positive_counter[typ].append(
-    #                 max(pred_masks_dict[typ].sum(), 1))
 
     def print_stats(self):
         """Print statistics."""
@@ -157,10 +102,6 @@ class GroundEvaluator:
             print('{}Recall{{subj|obj|total}} {}  {}  {}'.format(
                 rmode, *(wrap_dec(self._compute_wmIoU(rmode, typ))
                          for typ in ['subj', 'obj', 'total'])))
-        # for rmode in ('micro', 'macro'):
-        #     print('{}Precision{{subj|obj|total}} {}  {}  {}'.format(
-        #         rmode, *(wrap_dec(self._compute_precision(rmode, typ))
-        #                  for typ in ['subj', 'obj', 'total'])))
 
     def _compute_precision(self, rmode, typ):
         """Compute micro or macro precision of typ group."""

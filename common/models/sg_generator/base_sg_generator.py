@@ -58,16 +58,6 @@ class BaseSGGenerator(nn.Module):
         self.pred_top_net = deepcopy(_top_net)
         self.transform = _backbone.transform
 
-        # Depth network
-        if 'depth' in self.features:
-            self._depth_net = torch.hub.load("intel-isl/MiDaS", "MiDaS_small")
-            self._depth_net.eval()
-            for p in self._depth_net.parameters():
-                p.requires_grad = False
-            self._depth_transform = torch.hub.load(
-                "intel-isl/MiDaS", "transforms").small_transform
-            self._depth_size = 16
-
         # Rest parameters
         self.spatial_extractor = SpatialFeatureExtractor()
         self.softmax = nn.Softmax(dim=1)
@@ -105,14 +95,6 @@ class BaseSGGenerator(nn.Module):
             objects['masks'] = self.get_obj_masks(object_boxes)
         # Refine object features using context
         objects = self.contextualize(objects, base_features)
-        # Depth features
-        if 'depth' in self.features:
-            img_d = self._depth_transform(
-                image.permute(1, 2, 0).cpu().numpy()
-            ).to(self._device)
-            objects['depth'] = self._depth_net(img_d)
-            self._box_scales_d = self._compute_scales(
-                image.shape[-2:], objects['depth'].shape[-2:])
 
         # Iterative forward pass over sub-batches for memory issues
         outputs = [

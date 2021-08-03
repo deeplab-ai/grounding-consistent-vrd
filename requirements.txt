@@ -1,0 +1,11 @@
+Pillow
+colorlog==4.0.2
+gdown
+h5py
+torch
+torchvision
+tqdm==4.31.1
+scikit-learn==0.22.2
+pyyaml
+tensorboard
+wget

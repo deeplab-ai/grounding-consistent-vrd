@@ -34,27 +34,15 @@ class TrainTester(SGGTrainTester):
             0.5 * losses['v-CE'] + 0.5 * losses['l-CE']
             + losses['subj'] + losses['pred'] + losses['obj']
         )
-        extra_losses = None
         if self._use_multi_tasking and self._task != 'preddet':
             loss += self._multitask_loss(outputs[1], batch, step)
-        if self.teacher is not None and self._negative_loss is None\
-           and not self._use_consistency_loss:
+        if self.teacher is not None and not self._use_consistency_loss:
             losses['KD'] = (
                 self._kd_loss(v_scores, outputs[1], batch, step)
                 + self._kd_loss(l_scores, outputs[1], batch, step)
             )
             if self.training_mode:
                 loss += losses['KD']
-        # Negative Loss
-        if self.teacher is not None and self._negative_loss is not None:
-            if self._neg_classes is not None:
-                neg_classes = self._neg_classes
-            else:
-                neg_classes = [i for i in range(self.net.num_rel_classes - 1)]
-            losses['NEG'] = self._negatives_loss(
-                outputs, batch, step, neg_classes, self._negative_loss)
-            if self.training_mode:
-                loss += losses['NEG']
         if self._use_consistency_loss and self._epoch >= 1:
             cons_loss_vis = \
                 self._consistency_loss(batch, step, v_scores, typ='triplet_sm')

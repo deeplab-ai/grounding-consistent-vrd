@@ -58,7 +58,7 @@ class ResearchConfig(Config):
                  apply_dynamic_lr=False, use_early_stopping=True,
                  restore_on_plateau=True, patience=1, commit='', num_workers=2,
                  use_consistency_loss=False, use_graphl_loss=False,
-                 misc_params=None, overfit=False, **kwargs):
+                 misc_params=None, **kwargs):
         """Initialize configuration instance.
         :param use_graphl_loss:
         """
@@ -81,7 +81,6 @@ class ResearchConfig(Config):
         self.use_weighted_ce = use_weighted_ce
         self.use_consistency_loss = use_consistency_loss
         self.use_graphl_loss = use_graphl_loss
-        self.misc_params = misc_params
         self.compute_accuracy = compute_accuracy and self.task == 'preddet'
         self.use_merged = use_merged
         self._batch_size = batch_size
@@ -92,7 +91,6 @@ class ResearchConfig(Config):
         self.use_early_stopping = use_early_stopping
         self.restore_on_plateau = restore_on_plateau
         self.patience = patience
-        self.overfit=overfit
         self.commit = (
             commit + '_' + self.net_name if commit != ''
             else self.net_name

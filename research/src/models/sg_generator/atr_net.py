@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """Attention-Translation-Relation Network, Gkanatsios et al., 2019."""
 
-import torch
 from torch.nn import functional as F
 
 from common.models.sg_generator import ATRNet
@@ -24,12 +23,6 @@ class TrainTester(SGGTrainTester):
         targets = self.data_loader.get('predicate_ids', batch, step)
 
         # Losses
-        # targets_1hot = torch.zeros_like(scores)
-        # targets_1hot[torch.arange(len(scores)), targets] = 1
-        # losses = {'CE': F.binary_cross_entropy_with_logits(scores, targets_1hot, reduction='none').mean(1),
-        #           'p-CE': F.binary_cross_entropy_with_logits(p_scores, targets_1hot, reduction='none').mean(1),
-        #           'os-CE': F.binary_cross_entropy_with_logits(os_scores, targets_1hot, reduction='none').mean(1)
-        #           }
         losses = {
             'CE': self.criterion(scores, targets),
             'p-CE': self.criterion(p_scores, targets),
@@ -47,23 +40,13 @@ class TrainTester(SGGTrainTester):
                     + F.cross_entropy(bg_p_scores, bg_targets, reduction='none')
                     + F.cross_entropy(bg_os_scores, bg_targets, reduction='none')
             )
-        if self.teacher is not None and self._negative_loss is None \
-                and not self._use_consistency_loss:
+        if self.teacher is not None and not self._use_consistency_loss:
             losses['KD'] = self._kd_loss(scores, outputs[1], batch, step)
             if self.training_mode:
                 loss += losses['KD']
-        if self._negative_loss is not None:
-            if self._neg_classes is not None:
-                neg_classes = self._neg_classes
-            else:
-                neg_classes = [i for i in range(self.net.num_rel_classes - 1)]
-            losses['NEG'] = self._negatives_loss(
-                outputs, batch, step, neg_classes, self._negative_loss)
-            if self.training_mode:
-                loss += losses['NEG']
         if self._use_consistency_loss and self._epoch >= 1:
             cons_loss = \
-                self._consistency_loss(batch, step, scores, typ='triplet_sm')
+                self._consistency_loss(batch, step, scores)
             losses['Cons'] = cons_loss
             if self.training_mode:
                 loss += cons_loss

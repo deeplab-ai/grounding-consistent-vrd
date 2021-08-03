@@ -133,7 +133,7 @@ class SGGTrainTester(BaseTrainTester):
                 loss += losses['KD']
 
         # Consistency Loss
-        if self._use_consistency_loss and self._epoch >= 0:
+        if self._use_consistency_loss and self._epoch >= 1:
             losses['Cons'] = self._consistency_loss(batch, step, scores)
             loss += losses['Cons']
 

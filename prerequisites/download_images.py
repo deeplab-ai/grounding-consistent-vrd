@@ -20,13 +20,7 @@ def download_images(data_folder):
     if not os.path.exists(data_folder + 'VG/'):
         print('Dowloading VG images...')
         download_vg(data_folder)
-    if not os.path.exists(data_folder + 'UnRel/'):
-        print('Dowloading UnRel images...')
-        download_unrel(data_folder)
-    if not os.path.exists(data_folder + 'COCO/'):
-        print('Dowloading COCO images...')
-        download_coco(data_folder)
-    for dataset in ['VRD', 'VG', 'UnRel']:
+    for dataset in ['VRD', 'VG']:
         if not os.path.exists(data_folder + dataset + '/sample_images/'):
             sample_images(data_folder, dataset)
 
@@ -89,74 +83,6 @@ def download_vg(data_folder):
         )
     shutil.rmtree(data_folder + 'VG_100K')
     shutil.rmtree(data_folder + 'VG_100K_2')
-
-
-def download_unrel(data_folder):
-    """Download UnRel images."""
-    if not os.path.exists(data_folder + 'UnRel/'):
-        os.mkdir(data_folder + 'UnRel/')
-    if not os.path.exists(data_folder + 'UnRel/images/'):
-        os.mkdir(data_folder + 'UnRel/images/')
-    data_folder = str(data_folder + 'UnRel/images/')
-    # Download both VRD and UnRel images
-    os.system("wget " + VRD)
-    shutil.move('sg_dataset.zip', data_folder + 'sg_dataset.zip')
-    with ZipFile(data_folder + 'sg_dataset.zip') as fid:
-        fid.extractall(data_folder)
-    os.remove(data_folder + 'sg_dataset.zip')
-    os.system("wget " + UNREL)
-    shutil.move('unrel-dataset.tar.gz', data_folder + 'unrel-dataset.tar.gz')
-    with tarfile.open(data_folder + 'unrel-dataset.tar.gz') as fid:
-        fid.extractall(data_folder)
-    os.remove(data_folder + 'unrel-dataset.tar.gz')
-    # Move all images to specified path
-    for name in os.listdir(data_folder + 'sg_dataset/sg_train_images/'):
-        shutil.move(
-            data_folder + 'sg_dataset/sg_train_images/' + name,
-            data_folder + name
-        )
-    for name in os.listdir(data_folder + 'sg_dataset/sg_test_images/'):
-        shutil.move(
-            data_folder + 'sg_dataset/sg_test_images/' + name,
-            data_folder + name
-        )
-    for name in os.listdir(data_folder + 'images/'):
-        shutil.move(data_folder + 'images/' + name, data_folder + name)
-    shutil.rmtree(data_folder + 'sg_dataset')
-    shutil.rmtree(data_folder + 'images')
-
-
-def download_coco(data_folder):
-    """Download COCO images."""
-    if not os.path.exists(data_folder + 'COCO/'):
-        os.mkdir(data_folder + 'COCO/')
-    if not os.path.exists(data_folder + 'COCO/images/'):
-        os.mkdir(data_folder + 'COCO/images/')
-    data_folder = str(data_folder + 'COCO/images/')
-    # Download train and val images
-    os.system("wget http://images.cocodataset.org/zips/train2017.zip")
-    shutil.move('train2017.zip', data_folder + 'train2017.zip')
-    with ZipFile(data_folder + 'train2017.zip') as fid:
-        fid.extractall(data_folder)
-    os.remove(data_folder + 'train2017.zip')
-    os.system("wget http://images.cocodataset.org/zips/val2017.zip")
-    shutil.move('val2017.zip', data_folder + 'val2017.zip')
-    with ZipFile(data_folder + 'val2017.zip') as fid:
-        fid.extractall(data_folder)
-    os.remove(data_folder + 'val2017.zip')
-    # Move all images to specified path
-    for name in os.listdir(data_folder + 'train2017/'):
-        shutil.move(
-            data_folder + 'train2017/' + name,
-            data_folder + name
-        )
-    for name in os.listdir(data_folder + 'val2017/'):
-        shutil.move(
-            data_folder + 'val2017/' + name,
-            data_folder + name
-        )
-    shutil.rmtree(data_folder + 'train2017')
-    shutil.rmtree(data_folder + 'val2017')
 
 
 def sample_images(data_folder, dataset):

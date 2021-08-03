@@ -7,17 +7,6 @@ from os import path as osp
 
 import numpy as np
 import torch
-import yaml
-
-# Variables
-with open('prerequisites_config.yaml', 'r') as fid:
-    CONFIG = yaml.load(fid, Loader=yaml.FullLoader)
-if osp.exists('/gpu-data/mdiom/'):
-    DATA_FOLDER = '/gpu-data/mdiom/'
-elif osp.exists('/gpu-data2/ngan/'):
-    DATA_FOLDER = '/gpu-data2/ngan/'
-else:
-    DATA_FOLDER = CONFIG['prerequisites_path']
 
 
 class Config:
@@ -44,14 +33,7 @@ class Config:
                 less than this number
             - num_tail_classes: int or None, keep the num_tail_classes
                 with the fewest samples
-            - use_negative_samples: bool, use extra mined negatives
-            - negative_loss: str, use _negatives_loss()
-            - neg_classes: [int], on which classes _negatives_loss() is applied
-                                  eg. [1, 4, ...], if not set it applies to all
-        General model params:
-            - is_context_projector: bool, for projectors, use context
-            - is_cos_sim_projector: bool, project features on weights
-                using cosine similarity
+            - test_on_negatives: flag, weather to test and report precision
         General:
             - device: str, device (gpu/cpu), e.g. 'cuda:0'
             - prerequisites_path: str, path where data are stored
@@ -62,11 +44,9 @@ class Config:
     def __init__(self, dataset='VRD', task='preddet', bg_perc=None,
                  filter_duplicate_rels=False, filter_multiple_preds=False,
                  max_train_samples=None, num_tail_classes=None,
-                 is_context_projector=True, is_cos_sim_projector=False,
-                 prerequisites_path=DATA_FOLDER, rel_batch_size=64,
+                 prerequisites_path='prerequisites/', rel_batch_size=64,
                  use_coco=False, device='cuda:0',
-                 use_negative_samples=False, negative_loss=None,
-                 neg_classes=None, test_on_negatives=False, **kwargs):
+                 test_on_negatives=False, **kwargs):
         """Initialize configuration instance."""
         self.dataset = dataset
         self.task = task
@@ -75,15 +55,10 @@ class Config:
         self.filter_multiple_preds = filter_multiple_preds
         self.max_train_samples = max_train_samples
         self.num_tail_classes = num_tail_classes
-        self.is_context_projector = is_context_projector
-        self.is_cos_sim_projector = is_cos_sim_projector
         self.prerequisites_path = prerequisites_path
         self.rel_batch_size = rel_batch_size
         self.use_coco = use_coco
         self._device = device
-        self.use_negative_samples = use_negative_samples
-        self.negative_loss = negative_loss
-        self.neg_classes = neg_classes
         self.test_on_negatives = test_on_negatives
         self._json_path = osp.join(prerequisites_path, 'sgg_annos/', '')
         self._set_dataset_classes(dataset)

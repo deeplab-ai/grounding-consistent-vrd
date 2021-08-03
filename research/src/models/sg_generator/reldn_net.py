@@ -7,7 +7,6 @@ import torch.nn.functional as F
 from common.models.sg_generator import RelDN
 from research.src.train_testers import SGGTrainTester
 
-# TODO: remove losses already implemented in sgg_train_tester_class.py
 class TrainTester(SGGTrainTester):
     """Extends SGGTrainTester."""
 
@@ -49,12 +48,10 @@ class TrainTester(SGGTrainTester):
 
         loss = (
             losses['CE'] + losses['vis-CE'] + losses['spat-CE']
-            # + 1.0 * losses['L1'] + 1.0 * losses['L2'] + 1.0 * losses['L3']
         )
         if self._use_multi_tasking and self._task != 'preddet':
             loss += self._multitask_loss(outputs[1], batch, step)
-        if self.teacher is not None and self._negative_loss is None \
-                and not self._use_consistency_loss:
+        if self.teacher is not None and not self._use_consistency_loss:
             losses['KD'] = self._kd_loss(scores, outputs[1], batch, step)
             if self.training_mode:
                 loss += losses['KD']
