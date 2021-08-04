@@ -2,8 +2,9 @@
 ### [deeplab.ai](https://deeplab.ai)
 
 ### Markos Diomataris, Nikolaos Gkanatsios, Vassilis Pitsikalis, Petros Maragos
- Using our Grounding Consistency Distillation
-Loss we are able to counter the bias of relationships' context by leveraging grounding constraints on unlabeled object pairs.
+ Using our **Grounding Consistency Distillation**
+Loss we are able to counter the bias of relationships' context by leveraging grounding constraints on 
+ predicted relations of unlabeled object pairs.
 This semi-supervised method is model agnostic. This is the repository containing code for reproducing our ICCV 2021 paper.
 
 ![alt text](.readme_figs/teaser_new.png)
@@ -46,5 +47,27 @@ The `--bg_perc` option signifies the percentage of unlabeled samples used while 
 
 # Testing
 
-After training, testing is automatically performed.
+After training, testing is automatically performed and micro/macro Recal@[20, 50, 100] is printed for both constrained
+and unconstrained scenarios while also calculating zero-shot results.
 To produce metrics for precision (mP+ in paper) add the option `--test_on_negatives` on step 3. 
+
+Checkpointing is performed so re-running step 3 for an already trained model will simply perform testing.
+
+# VRD Tasks
+These are the different scenarios you can test the Recall of a Scene Graph Generator depending on what information
+is given during training.
+
+| Task        | Objects' boxes| Objects' Categories| Interacting Objects |
+| ------------- |:-------------:|:-------------:|:-------------:|
+| Predicate Detection (PredDet)      | Yes | Yes | Yes | 
+| Predicate Classification (PredCls) | Yes | Yes | No |
+| Scene Graph Classification (SGCls) | Yes | No | No |
+| Scene Graph Generation (SGGen)     | No | No | No |
+| Phrase Detection (PhrDet)*          | No | No | No |
+
+* Difference with SGGen is that we calculate IoU based on phrase box (minimum box containing subject/object)
+  instead of object boxes.
+  
+In this repository we provide the opion to train on PredDet(default) or PredCls. Use the option `--task=<preddet|predcls>`
+
+Feel free to contact us for any issues :)
