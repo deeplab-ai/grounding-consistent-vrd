@@ -7,6 +7,8 @@ Loss we are able to counter the bias of relationships' context by leveraging gro
  predicted relations of unlabeled object pairs.
 This semi-supervised method is model agnostic. This is the repository containing code for reproducing our ICCV 2021 paper.
 
+https://openaccess.thecvf.com/content/ICCV2021/papers/Diomataris_Grounding_Consistency_Distilling_Spatial_Common_Sense_for_Precise_Visual_Relationship_ICCV_2021_paper.pdf
+
 ![alt text](.readme_figs/teaser_new.png)
 
 [comment]: <> (![alt text]&#40;.readme_figs/GCD.png&#41;)
