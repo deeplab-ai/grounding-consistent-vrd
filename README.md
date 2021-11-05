@@ -70,6 +70,6 @@ is given during training.
 \* Difference with SGGen is that we calculate IoU based on phrase box (minimum box containing subject/object)
   instead of object boxes.
   
-In this repository we provide the opion to train on PredDet(default) or PredCls. Use the option `--task=<preddet|predcls>`
+In this repository we provide the option to train on PredDet(default) or PredCls. Use the option `--task=<preddet|predcls>`
 
 Feel free to contact us for any issues :)
