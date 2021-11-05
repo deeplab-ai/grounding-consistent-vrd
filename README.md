@@ -67,7 +67,7 @@ is given during training.
 | Scene Graph Generation (SGGen)     | No | No | No |
 | Phrase Detection (PhrDet)*          | No | No | No |
 
-* Difference with SGGen is that we calculate IoU based on phrase box (minimum box containing subject/object)
+\* Difference with SGGen is that we calculate IoU based on phrase box (minimum box containing subject/object)
   instead of object boxes.
   
 In this repository we provide the opion to train on PredDet(default) or PredCls. Use the option `--task=<preddet|predcls>`
