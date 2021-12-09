@@ -37,7 +37,7 @@ Training has three steps:
 
 2. Train the teacher network
 
-`python main_research.py --model=atr_net --net_name=atr_teacher_net --teacher=parsing_net --dataset=<VRD|VG200>
+`python main_research.py --model=atr_net --net_name=atr_teacher_net --teacher=parsing_net --use_consistency_loss --dataset=<VRD|VG200>
 --bg_perc=0.2`
 
 The `--bg_perc` option signifies the percentage of unlabeled samples used while training.
